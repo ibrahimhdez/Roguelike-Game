@@ -20,10 +20,8 @@ personaje_t::~personaje_t(void){}
 
 void personaje_t::movimiento(tablero_t& t, objeto_t& o)
 {
-
   	system("stty raw"); 
-
-  
+  	
   	char input = getchar(); 
 	int anterior_x=0, anterior_y=0;
 
@@ -48,8 +46,6 @@ void personaje_t::movimiento(tablero_t& t, objeto_t& o)
  		t.espacio(t.get_pos(inicio_y_,inicio_x_)) = 'X';
  	}
 
-
- 	
  	if(t.espacio(t.get_pos(y_,x_))=='*') //Impide que el personaje atraviese las paredes de las mazmorras
  	{
  		t.espacio(t.get_pos(anterior_y,anterior_x)) = '@';
