@@ -1,147 +1,45 @@
-#include "mazmorra.hpp"
+#include "monstruo.hpp"
 #include <iostream>
-#include <string>
 
 using namespace std;
 
-mazmorra_t::mazmorra_t(int i, int j):
-x_(i),
-y_(j)
-{}
-
-mazmorra_t::~mazmorra_t(void){}
-
-void mazmorra_t::crea(pasillo_t& p, pasillo_t& p2, tablero_t& t, personaje_t& pers)
+monstruo_t::monstruo_t(int x, int y, tablero_t& t):
+x_(x),
+y_(y)
 {
-	int pasillo = p.get_long();
-	int pasillo2 = p2.get_long();
-
-	t.espacio(pers.get_posicion(t)) = 'X';
-
-	for(int y=0; y<t.get_y(); y++)
-		for(int x=0; x<t.get_x(); x++)
-		{
-			if((y==0)&&(x==0))//Crea primera línea horizontal de la primera mazmorra
-				for(int i=0; i<x_; i++)	
-					t.espacio(t.get_pos(y,i+x)) = '*';
-			if((y==0)&&(x==x_+pasillo)) //Crea primera línea horizontal de la segunda mazmorra
-				for(int i=x_+pasillo; i<(x_*2)+pasillo+1; i++)
-					t.espacio(t.get_pos(y,i)) = '*';
-			else if(t.espacio(t.get_pos(y,x))!= '*')
-			if((y>0)&&(y<y_-1)&&(x==0)) //Crea primera línea vertical de la primera mazmorra
-				t.espacio(t.get_pos(y,x)) = '*';
-			if((x==x_-1)&&(y>0)&&(y<y_-1)) //Crea segunda línea vertical de la primera mazmorra
-			{
-				if(y==(y_-1)/2) //Crea el caracter + para el pasillo
-				{
-					t.espacio(t.get_pos(y,x)) = '+';
-					t.espacio(t.get_pos(y,x_)) = '#';
-				}
-				else
-					t.espacio(t.get_pos(y,x)) = '*';
-			}
-
-			if((y>0)&&(y<y_-1)&&(x==x_+pasillo)) //Crea primera linea vertical segunda mazmorra
-			{
-				if(y==(y_-1)/2) //Crea el caracter + para el pasillo
-				{
-					t.espacio(t.get_pos(y,x)) = '+';
-					t.espacio(t.get_pos(y,x-1)) = '#';
-				}
-				else
-				t.espacio(t.get_pos(y,x)) = '*';
-			}
-
-			if((y>0)&&(y<y_-1)&&(x==x_*2+pasillo)) //Crea segunda linea vertical segunda mazmorra
-				t.espacio(t.get_pos(y,x)) = '*';
-
-			if((y==y_-1)&&(x==0)) //Crea la segunda linea horizontal de la primera mazmorra
-				for(int i=0; i<x_; i++)
-					t.espacio(t.get_pos(y,x+i)) = '*';
-
-			if((y==y_-1)&&(x==x_+pasillo)) //Crea la segunda linea horizontal de la segunda mazmorra
-				for(int i=x_+pasillo; i<x_*2+pasillo+1; i++)
-				{
-					if(i==(x_+pasillo)+(x_)/2) //Crea el caracter + para el pasillo de la segunda mazmorra a la tercera
-					{
-						t.espacio(t.get_pos(y,i)) = '+';
-						t.espacio(t.get_pos(y_,y+pasillo+y+y+y+1)) = '#';
-					}
-					else
-						t.espacio(t.get_pos(y,i)) = '*';
-				}
-
-			if((y==(y_+pasillo2-1))&&(x==x_+pasillo)) //Crea la primera linea horizontal de la tercera mazmorra
-				for(int i=x_+pasillo; i<(x_*2)+pasillo+1; i++)
-				{
-					if(i==(x_+pasillo)+(x_)/2) //Crea el caracter + para el pasillo de la tercera mazmorra
-					{
-						t.espacio(t.get_pos(y,i)) = '+';
-						t.espacio(t.get_pos(y-1,i)) = '#';
-					}
-					else
-						t.espacio(t.get_pos(y,i)) = '*';
-				
-				}
-
-			if((y>y_+pasillo2-1)&&(y<y_+pasillo2+y_)&&(x==x_+pasillo)) //Crea primera fila vertical de la tercera mazmorra
-				t.espacio(t.get_pos(y,x)) = '*';
-
-			if((y>y_+pasillo2-1)&&(y<y_+pasillo2+y_)&&(x==x_+pasillo+x_)) //Crea la segunda fila vertical de la tercera mazmmorra
-				t.espacio(t.get_pos(y,x)) = '*';
-
-			if((y==(y_+pasillo2+y_))&&(x==x_+pasillo)) //Crea la segunda linea horizontal de la tercera mazmorra
-				for(int i=x_+pasillo; i<(x_*2)+pasillo+1; i++)
-					t.espacio(t.get_pos(y,i)) = '*';
-
-
-			if((t.espacio(t.get_pos(y,x))!='*')&&(t.espacio(t.get_pos(y,x))!='+')&&(t.espacio(t.get_pos(y,x))!='#')&&(t.espacio(t.get_pos(y,x))!='X')&&(t.espacio(t.get_pos(y,x))!='O')&&(t.espacio(t.get_pos(y,x))!='&'))
-				t.espacio(t.get_pos(y,x)) = ' ';
-		}
+	t.espacio(t.get_pos(y_,x_)) = 'O';
 }
 
-ostream& mazmorra_t::write(ostream& os, tablero_t& t, objeto_t& o, personaje_t& p)
-{
-	os << endl << endl << endl << endl;
+monstruo_t::~monstruo_t(void){}
 
-	for(int y=0; y<t.get_y(); y++)
+void monstruo_t::movimiento(tablero_t& t)
+{
+	int i = rand() % 8;
+
+	int anterior_x = x_, anterior_y = y_;
+	
+	switch(i)
 	{
-		for(int x=0; x<t.get_x(); x++)
-		{
-			if(t.espacio(t.get_pos(y,x))!=' ')
-			{
-				if(t.espacio(t.get_pos(y,x))=='@')
-					os << "\033[1;94m@\033[0m";
-				else if(t.espacio(t.get_pos(y,x))=='O')
-					os << "\033[1;96mO\033[0m";
-				else if(t.espacio(t.get_pos(y,x))=='&')
-					os << "\033[1;93m&\033[0m";
-				else
-					os << t.espacio(t.get_pos(y,x));
-			}
-			else os << " ";
-		} 
-		os << endl;
+		case 0: break;
+		case 1: y_--;break;
+		case 2: y_--;x_++;break;
+		case 3: x_++;break;
+		case 4:	x_++;y_++;break;
+		case 5: y_++;break;
+		case 6: y_++;x_--;break;
+		case 7: x_--;break;
+		case 8: x_--;y_--;break;
 	}
 
-	os << "Vidas: ";
-	for(int i=0; i<p.get_life(); i++)
-		os << "\033[1;91m♥ \033[0m";
-	os << "              " << "Amuleto: ";
-	if(o.get_obtenido())
-		os << "Sí";
+    if((t.espacio(t.get_pos(y_,x_))=='*')||(t.espacio(t.get_pos(y_,x_))=='O')||(t.espacio(t.get_pos(y_,x_))=='&')||(t.espacio(t.get_pos(y_,x_))=='X')||(t.espacio(t.get_pos(y_,x_))=='@')||(t.espacio(t.get_pos(y_,x_))=='+'))
+	{
+		t.espacio(t.get_pos(anterior_y,anterior_x)) = 'O';
+		x_ = anterior_x;
+		y_ = anterior_y;
+	}
 	else
-		cout << "No";
-	for(int i=0 ; i<50; i++)
-		os << " ";
-} 
-
-int mazmorra_t::get_x(void)
-{
-	return x_;
-}
-
-int mazmorra_t::get_y(void)
-{
-	return y_;
+	{
+		t.espacio(t.get_pos(y_,x_)) = 'O';
+		t.espacio(t.get_pos(anterior_y,anterior_x)) = ' ';
+	}
 }
