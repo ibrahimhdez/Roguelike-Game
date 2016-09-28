@@ -71,22 +71,22 @@ void personaje_t::movimiento(tablero_t& t, objeto_t& o)
  	else if(t.espacio(t.get_pos(y_,x_))=='#') //Código para permitir caminar por los pasillos
  	{
  		pasillo_ = true;
+		
  		if(indicador_==true)
  		{
  			t.espacio(t.get_pos(y_,x_)) = '@';
  			t.espacio(t.get_pos(anterior_y,anterior_x))= '+';
  			indicador_ = false;
  		}
+		
  		else
  		{
  			t.espacio(t.get_pos(y_,x_)) = '@';
  			t.espacio(t.get_pos(anterior_y,anterior_x))= '#';
  		}
+		
  		if((t.espacio(t.get_pos(y_,x_))==' ')&&(pasillo_==true))
- 		{
  			t.espacio(t.get_pos(anterior_y,anterior_x))= '@';
- 		}
-
  	}
 
  	else if((t.espacio(t.get_pos(y_,x_))==' ')&&(indicador_==true))
@@ -131,6 +131,7 @@ void personaje_t::movimiento(tablero_t& t, objeto_t& o)
  	else
  	{
 		t.espacio(t.get_pos(y_,x_)) = '@';
+		
 		if(t.espacio(t.get_pos(anterior_y,anterior_x))!='X')
 			t.espacio(t.get_pos(anterior_y,anterior_x)) = ' ';
 	}
